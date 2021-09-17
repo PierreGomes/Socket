@@ -12,7 +12,7 @@ import java.net.Socket;
 public class MySocketServer {
     
     private final String RESPONSEHEADERS = 
-                                            "Access-Control-Allow-Origin: https://ah.we.imply.com\n" +
+                                            "Access-Control-Allow-Origin: https://ah.we.imply.com \n" +
                                             "Access-Control-Allow-Headers: Content-Type\n" +
                                             "Access-Control-Allow-Methods: POST\n" +
                                             "Access-Control-Expose-Headers: Content-Type, Cache-Control, Content-Length, Authorization\n" ;
@@ -30,13 +30,15 @@ public class MySocketServer {
    
    private int count = 0;
    
+   private ParseRequestStringHelper parser;
+   private boolean ok = true;
+   
    public MySocketServer(int port) throws InterruptedException{
        this.port = port;
-       
        startListeningPort();
    }
 
-    private void startListeningPort() throws InterruptedException {
+    private void startListeningPort() throws InterruptedException{
         //Inicia-se o servidor escutando na porta determinada
         try{
                 //Instancia-se o servidor
@@ -59,8 +61,8 @@ public class MySocketServer {
                 //===========================
                 System.out.println("-- Iniciando leitura do request");
                 //===========================
-                getRequestToString();
-                
+                parser = new ParseRequestStringHelper(getRequestToString(), "/", "\n");
+                System.out.println(getResponseHeader(parser.getRequestMethod()));
                 //Fecha conexão do socket
                 //===========================
                 System.out.println("-- Fechando Conexão do Socket");
@@ -68,6 +70,8 @@ public class MySocketServer {
                 isr.close();
                 br.close();
                 sockt.close();
+                
+                System.out.println(this.getResponseHeader(parser.getRequestMethod()));
                 //===========================
             }
         }catch (IOException e) {
@@ -75,6 +79,17 @@ public class MySocketServer {
        }
         
         
+    }
+    
+    public String getResponseHeader(String method){
+        
+        String resourceURL = this.parser.getMappedRequest().get("Origin");
+        
+        if(method.equals("OPTIONS") && ok){
+            return resourceURL;
+        }
+        System.out.println(resourceURL);
+        return "failed";
     }
     
     //Não ta funcionando (ver depois)
@@ -85,11 +100,15 @@ public class MySocketServer {
         pout.write(OK + RESPONSEHEADERS);
     }
 
-    private void getRequestToString() throws InterruptedException {
+    private String getRequestToString() throws InterruptedException {
+        /*
+        *Lê o Buffer do Request e transforma em String
+        */
         if(sockt != null){
             //======================================
-            System.out.println("--INICANDO LEITURA DO REQUEST");
+            System.out.println("==INICANDO LEITURA DO REQUEST");
             //======================================
+            
             receivedMessage = new String();
             
             try{
@@ -97,33 +116,40 @@ public class MySocketServer {
                 isr = new InputStreamReader(sockt.getInputStream());
                 br = new BufferedReader(isr);
                 
-                //===================================
+                
                 StringBuilder content = new StringBuilder();
                 int value;
                 while(br.ready()){
                     value = br.read();
                     content.append((char)value);
                 }
-                System.out.println("\n\n\nRecebido:\n"+content.toString());
                 
+                receivedMessage = content.toString();
+                System.out.println("\n\n====Dados recebidos:\n" + content.toString());
+                
+                
+                /* Para ler o request byte por byte não aplicavel
                 DataInputStream reader = new DataInputStream(sockt.getInputStream());
                 String s ="-";
                 
-                /*
                 while(reader.available() > 0){
                     byte b = reader.readByte();
                     System.out.println(b+" ");
                     
                 }
                 */
+                
                 //===================================
-                System.out.println("Saiu do loop");
+                System.out.println("==Fim da leitura do request");
                 //===================================
+                return receivedMessage;
+                
             }catch(IOException e){
                 e.printStackTrace();
             }
             
         }
+        return "failed";
         
     }
 
