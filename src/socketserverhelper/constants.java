@@ -1,11 +1,11 @@
 package socketserverhelper;
 public class constants {
-    private final String RESPONSEHEADEREXAMPLE = 
+    public final String RESPONSEHEADEREXAMPLE = 
                                             "Access-Control-Allow-Origin: https://ah.we.imply.com \n" +
                                             "Access-Control-Allow-Headers: Content-Type\n" +
                                             "Access-Control-Allow-Methods: POST\n" +
                                             "Access-Control-Expose-Headers: Content-Type, Cache-Control, Content-Length, Authorization\n" ;
-    private static String JSONTest =   "{\n" +
+    public static String JSONTest =   "{\n" +
                                 "  \"id\": 17507387,\n" +
                                 "  \"method\": \"imprimir\",\n" +
                                 "  \"params\": [\n" +
@@ -21,7 +21,7 @@ public class constants {
                                 "}"
     ;
     
-    private static final String POSTEXAMPLE =   "POST /Impressora HTTP/1.1\n" +
+    public static final String POSTEXAMPLE =   "POST /Impressora HTTP/1.1\n" +
                             "Host: 127.0.0.1:12222\n" +
                             "Connection: keep-alive\n" +
                             "Content-Length: 1593\n" +
@@ -41,7 +41,7 @@ public class constants {
                             "{\"id\":83418462,\"method\":\"imprimir\",\"params\":[\"0\",{\"template\":\"PHN0YXJ0Lz48bGFyZ3VyYV9wYWdpbmEgbWlsaW1ldHJvcz0iODAiLz48Yz5DT01QUk9WQU5URTxicj48cGFkIHRhbT0iMyIgY2hyPSIwIiBsYWRvPSJMIj4xPC9wYWQ+IHggPHBhZCB0YW09IjQwIiBjaHI9IiAiIGxhZG89IlIiPjAsMTAgUFJPRDwvcGFkPjxwYWQgdGFtPSIxMCIgY2hyPSIgIiBsYWRvPSJMIj5SJCAwLDEwPC9wYWQ+PGJyPjxicj48cGFkIHRhbT0nNDEnIGNocj0nICcgbGFkbz0nTCc+LS0tLS0tLTwvcGFkPjxicj48IS0tIEJFR0lOIHBhZ190b3RhbF9tb2VkYSAtLT48cGFkIHRhbT0nNDAnIGNocj0nICcgbGFkbz0nTCc+QlJMIDAsMTA8L3BhZD48YnI+PCEtLSBFTkQgcGFnX3RvdGFsX21vZWRhIC0tPkZPUk1BUyBERSBQQUdBTUVOVE88YnI+PCEtLSBCRUdJTiBmb3JtYXNwYWcgLS0+PHBhZCB0YW09IjI4IiBjaHI9IiAiIGxhZG89IlIiPkRJTkhFSVJPPC9wYWQ+PHBhZCB0YW09IjEwIiBjaHI9IiAiIGxhZG89IkwiPiAwLDEwPC9wYWQ+PGJyPjwhLS0gRU5EIGZvcm1hc3BhZyAtLT48YnI+PGJyPjxwYWQgdGFtPScxNScgY2hyPScgJyBsYWRvPSdSJz5OUk8gUmVjaWJvPC9wYWQ+OjxwYWQgdGFtPScyNScgY2hyPScgJyBsYWRvPSdMJz40NzwvcGFkPjxicj48cGFkIHRhbT0nMTUnIGNocj0nICcgbGFkbz0nUic+RW1pc3PDo288L3BhZD46PHBhZCB0YW09JzI1JyBjaHI9JyAnIGxhZG89J0wnPjE3LzA5LzIwMjEgMDk6MTE6NDY8L3BhZD48YnI+PHBhZCB0YW09JzE1JyBjaHI9JyAnIGxhZG89J1InPkZ1bmNpb27DoXJpbzwvcGFkPjo8cGFkIHRhbT0nMjUnIGNocj0nICcgbGFkbz0nTCc+QU5UT05JTyBQSUVSUkUgR09NRVM8L3BhZD48YnI+PHBhZCB0YW09JzE1JyBjaHI9JyAnIGxhZG89J1InPlBEVi1Ow7ptZXJvPC9wYWQ+OjxwYWQgdGFtPScyNScgY2hyPScgJyBsYWRvPSdMJz5QRFZfU0k8L3BhZD48YnI+PHNtYWxsPkNOUEo6IDAwLjAwMC4wMDAvMDAwMC0wMCAtIEkuTS46IDAuMDAwLjAwMC0wPGJyPlZvbHRlIHNlbXByZSE8YnI+PGJyPlBvd2VyZWQgYnkgaW1wbHkuY29tPC9zbWFsbD48L2M+PGZlZWQgbj0iMyIgLz48dG90YWxfY3V0Lz48ZWplY3QgdD0iMCIgLz4=\",\"usa_driver\":\"S\",\"usa_base64\":\"S\",\"usar_impresora_recibo\":true,\"usar_impresora_ingresso\":false}]}\n"
                             ;
     
-    private static final String OPTIONSEXAMPLE =   "OPTIONS /Impressora HTTP/1.1\n" +
+    public static final String OPTIONSEXAMPLE =   "OPTIONS /Impressora HTTP/1.1\n" +
                                             "Host: 127.0.0.1:12222\n" +
                                             "Connection: keep-alive\n" +
                                             "Accept: */*\n" +

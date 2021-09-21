@@ -21,6 +21,7 @@ public class ParseRequestStringHelper {
     private String Delimiter;
     
     private Boolean hasBody = false;
+    private Boolean hasOrigin;
     private String Body;
     private String Content_Type;
     
@@ -80,6 +81,13 @@ public class ParseRequestStringHelper {
                 String name = RequestString_Array.split(":")[0];
                 String value = RequestString_Array.split(":")[1];
                 
+                /*Validação do Origin*/
+                if(RequestString_Array.split(":").length == 3){
+                    boolean hasOrigin = true;
+                    value = RequestString_Array.split(":")[1] +":"+RequestString_Array.split(":")[2];
+                }
+                    
+                
                 /*Validação do Body*/
                 if( !hasBody && name.equals("Content-Type")){
                     hasBody = true;
@@ -92,7 +100,9 @@ public class ParseRequestStringHelper {
                     value = RequestString_Array;
                     this.Body = value;
                 }
-                        
+                
+                //System.out.println("Debug Mapper: " + name + ": " +value);
+                
                 map.put(name, value);
                 
             }catch(Exception e){
@@ -164,5 +174,8 @@ public class ParseRequestStringHelper {
         
         return value;
     }
-
+    
+    public String getTemplate(String JSON){
+        return null;
+    }
 }

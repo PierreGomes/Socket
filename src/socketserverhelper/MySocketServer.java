@@ -11,6 +11,10 @@ import java.net.Socket;
 
 public class MySocketServer {
     
+    private final String iniciandoSocket = "\n\n===================Iniciando Socket Nº: ";
+    private final String respondendoSocket = "\n\n=================Respondendo";
+    private final String lendoRequest = "\n\n=================Lendo request";
+    private final String fechandoSocket = "\n\n=================Fechando Socket";
     private final String RESPONSEHEADERS = 
                                             "Access-Control-Allow-Origin: https://ah.we.imply.com \n" +
                                             "Access-Control-Allow-Headers: Content-Type\n" +
@@ -37,42 +41,37 @@ public class MySocketServer {
        this.port = port;
        startListeningPort();
    }
+   
+   void log(String msg){
+       System.out.println(msg+"====================");
+   }
 
     private void startListeningPort() throws InterruptedException{
-        //Inicia-se o servidor escutando na porta determinada
+        
         try{
-                //Instancia-se o servidor
-                serverSockt = new ServerSocket(port);
+            /*Inicia servidor na porta indicada*/
+            serverSockt = new ServerSocket(port);
             
-            //loop
             while(true){
                 count++;
-                //===========================
-                System.out.println("\n\n========================================Iniciando Socket Nº: " + count +"====================================");
-                //===========================
-                //Inicia-se a conexão
+                log(iniciandoSocket + count);
+                
+                /*Aceita Request*/
                 sockt = serverSockt.accept();
                 
-                //===========================
-                System.out.println("-- Respondendo Request do IP: " + sockt.getRemoteSocketAddress());
-                //===========================
-                reponse();
+                log(lendoRequest);
+                String request = getRequestToString();
+                parser = new ParseRequestStringHelper(request, "/", "\n");
+                System.out.println(request);
                 
-                //===========================
-                System.out.println("-- Iniciando leitura do request");
-                //===========================
-                parser = new ParseRequestStringHelper(getRequestToString(), "/", "\n");
-                System.out.println(getResponseHeader(parser.getRequestMethod()));
-                //Fecha conexão do socket
-                //===========================
-                System.out.println("-- Fechando Conexão do Socket");
+                log(respondendoSocket);
+                System.out.println(reponse());
+                
+                log(fechandoSocket);
                 pout.close();
                 isr.close();
                 br.close();
                 sockt.close();
-                
-                System.out.println(this.getResponseHeader(parser.getRequestMethod()));
-                //===========================
             }
         }catch (IOException e) {
            e.printStackTrace();
@@ -81,23 +80,43 @@ public class MySocketServer {
         
     }
     
-    public String getResponseHeader(String method){
-        
-        String resourceURL = this.parser.getMappedRequest().get("Origin");
-        
-        if(method.equals("OPTIONS") && ok){
-            return resourceURL;
-        }
-        System.out.println(resourceURL);
-        return "failed";
-    }
     
-    //Não ta funcionando (ver depois)
-    private void reponse() throws IOException {
-        pout = new PrintWriter(sockt.getOutputStream());
+    private String reponse() throws IOException {
+        try{
+            /*Identifica o método do request*/
+            String method = parser.getRequestMethod();
+            /*Responde 200 ok por padrão*/
+            String response = OK;
+            /*Se for o OPTIONS responde com o Response Header*/
+            if(method.equals("OPTIONS ")){
+                String responseHeader = getResponseHeader();  
+                response += responseHeader;
+            }
+
+            /*Metódos de resposta ao request*/
+            pout = new PrintWriter(sockt.getOutputStream());
+            pout.write(response);
+            return response;
+        }catch(Exception e){
+            log("erro ao responder request");        
+            return "";
+        }
         
-        System.out.println("\nResponse:\n"+OK + RESPONSEHEADERS);
-        pout.write(OK + RESPONSEHEADERS);
+    }
+    public String getResponseHeader(){
+        try{
+            String resourceURL = this.parser.getMappedRequest().get("Origin");
+            String ACAllowHeaders = this.parser.getMappedRequest().get("Access-Control-Request-Headers");
+            String ACAllowMethods = this.parser.getMappedRequest().get("Access-Control-Request-Method");
+            
+            String responseHeader =         "Access-Control-Allow-Origin:" +resourceURL+"\n"+
+                                            "Access-Control-Allow-Headers:"+ ACAllowHeaders+"\n" +
+                                            "Access-Control-Allow-Methods:"+ ACAllowMethods+"\n" ;
+            return responseHeader;
+        }catch(Exception e){
+            log("erro ao construir Response Header");
+            return "";
+        }
     }
 
     private String getRequestToString() throws InterruptedException {
@@ -105,45 +124,19 @@ public class MySocketServer {
         *Lê o Buffer do Request e transforma em String
         */
         if(sockt != null){
-            //======================================
-            System.out.println("==INICANDO LEITURA DO REQUEST");
-            //======================================
-            
             receivedMessage = new String();
-            
             try{
                 //Metodos e Objetos para leitura do conteudo do request 
                 isr = new InputStreamReader(sockt.getInputStream());
                 br = new BufferedReader(isr);
-                
-                
                 StringBuilder content = new StringBuilder();
                 int value;
                 while(br.ready()){
                     value = br.read();
                     content.append((char)value);
                 }
-                
                 receivedMessage = content.toString();
-                System.out.println("\n\n====Dados recebidos:\n" + content.toString());
-                
-                
-                /* Para ler o request byte por byte não aplicavel
-                DataInputStream reader = new DataInputStream(sockt.getInputStream());
-                String s ="-";
-                
-                while(reader.available() > 0){
-                    byte b = reader.readByte();
-                    System.out.println(b+" ");
-                    
-                }
-                */
-                
-                //===================================
-                System.out.println("==Fim da leitura do request");
-                //===================================
                 return receivedMessage;
-                
             }catch(IOException e){
                 e.printStackTrace();
             }
@@ -153,6 +146,5 @@ public class MySocketServer {
         
     }
 
-    
-    
+
 }
