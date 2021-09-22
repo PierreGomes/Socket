@@ -50,6 +50,10 @@ public class ParseRequestStringHelper {
         this.getMappedRequest();
     }
     
+    public String getRequestMethod(){
+        return this.RequestMethod;
+    }
+    
     public String[] splitString(String string, String delimiter){
         return string.split(delimiter);
     }
@@ -110,9 +114,6 @@ public class ParseRequestStringHelper {
                 System.out.println("Erro ao fazer o parse da string(Body)");
             }
         }
-        
-        //System.out.println(map.get("body"));
-        
         return map;
     }
     public String[]  getArray(){
@@ -124,10 +125,13 @@ public class ParseRequestStringHelper {
     public String getBody(){
         return this.Body;
     }
+    public boolean getHasBody(){
+        return this.hasBody;
+    }
     public String getContentType(){
         return this.Content_Type;
     }
-    public String getRequestMethod(){
+    public String getMethod(){
         return this.RequestMethod;
     }
     public boolean getRegEx(String text, String RegEx){
@@ -146,7 +150,8 @@ public class ParseRequestStringHelper {
         try{
             value = jObject.getString(key);
         }catch(Exception e){
-            e.printStackTrace();
+            value = String.valueOf(jObject.getInt(key));
+            //e.printStackTrace();
             System.out.println("Erro na captura da String JSON");
         }
         
