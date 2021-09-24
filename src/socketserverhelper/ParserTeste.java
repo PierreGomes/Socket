@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.json.*;
 
-public class ParseRequestStringHelper {
+public class ParserTeste {
     /*
     * # Auxilia na recuperação de dados a String do request
     */
@@ -37,7 +37,7 @@ public class ParseRequestStringHelper {
     
     private boolean error = false;
     
-    ParseRequestStringHelper(String request, String FirstLineDelimiter, String Delimiter){
+    ParserTeste(String request, String FirstLineDelimiter, String Delimiter){
         error = !sync(request, FirstLineDelimiter, Delimiter);
         
         if(error)
@@ -142,7 +142,7 @@ public class ParseRequestStringHelper {
                 map.put(name, value);
             }catch(Exception e){
                 /*Log pra debugar*/
-                //log("Erro ao mapear a requisição.");
+                log("Erro ao mapear a requisição.");
             }
         }
         /*Retorna HashMap*/

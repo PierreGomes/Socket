@@ -86,6 +86,7 @@ public class MySocketServer {
                 /*Log*/
                 log("LENDO REQUEST");
                 /* #3 Lê o buffer da conexão*/
+                sleep(500);
                 getRequestToString();
                 
                 /* #4 Nova Instância do parserHelper a cada conexão*/
@@ -97,7 +98,7 @@ public class MySocketServer {
                 erro = sync();
                 
                 /*Log do request recebido(Inteiro: header e body)*/                
-                log(this.method+"\n"+requestString);
+                log(this.requestString);
                 
                 /*Log*/
                 log("RESPONDENDO");
@@ -114,8 +115,11 @@ public class MySocketServer {
                 inputSR.close();
                 socket.close();
                 sleep(2000);
-                if(erro)
+                if(erro){
                     debug();
+                    sleep(2000);
+                }
+                
                 cleanTerminal();
             }
         }catch (IOException e) {
@@ -177,7 +181,12 @@ public class MySocketServer {
         *   - resourceURL
         *   - hasbody
         *   - body
+        * # Validação de erros
         */
+        
+        /*Sinaliza erro na recuperação de dados da requisição*/
+        if(parser.getError())
+            return true;
         
         try{
             /*requestMap*/
@@ -205,6 +214,7 @@ public class MySocketServer {
     private void response() throws IOException {
         /*
         * #6 Responde o request
+        *   - Validação de erros
         */
         if(erro)
             response = ERROR;
@@ -269,6 +279,8 @@ public class MySocketServer {
 
     private void debug() throws IOException {
         socket = new Socket();
+        serverSocket.close();
         serverSocket = new ServerSocket(port);
+        log("Reiniciando Socket");
     }
 }
